@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema({
     originalUrl: String,
+    urlCode: String,
     shortUrl: String,
     date: {
         type: String,

@@ -8,9 +8,27 @@ const URL = require('../models/url');
 // API base endpoint.
 const baseUrl = 'http://localhost:3000';
 
-/**
+/** 
  * @swagger
- * 
+ * /shorten:
+ *  post:
+ *    summary: Shortens a url.
+ *    requestBody:
+ *      required: true
+ *      description: The url to be shortened.
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              originalUrl:    
+ *                type: string
+ *                required: true
+ *    responses:
+ *      '200':
+ *        description: A successful response.
+ *      '400':
+ *        description: Unsuccessful response.
  */
 router.post('/shorten', async (req, res) => {
     const { originalUrl } = req.body;
@@ -30,11 +48,13 @@ router.post('/shorten', async (req, res) => {
         if (url) return res.status(200).json(url);
 
         // Generate the shortened url.
-        const shortUrl = `${baseUrl}/${shortId.generate()}`;
+        const urlCode = shortId.generate();
+        const shortUrl = `${baseUrl}/${urlCode}`;
 
         // Create a new url mongodb document.
         url = new URL({
             originalUrl,
+            urlCode,
             shortUrl
         });
 

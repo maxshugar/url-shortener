@@ -1,12 +1,12 @@
-const express = require('express');
-const app = express();
+const { startMongoDB } = require('./util/mongoDB');
+const { startExpress } = require("./util/express");
+const { connectMongoose } = require('./util/mongoose');
 
-const port = process.env.PORT || 3000;
-
-const router = express.Router();
-
-
-
-app.listen(port, () => {
-    console.log(`Express server listening on port ${port}`);
-})
+(async () => {
+    // Start the express server.
+    await startExpress();
+    // Start the mongodb in-memory server.
+    const mongoUri = await startMongoDB();
+    // Connect mongoose to mongodb server.
+    await connectMongoose(mongoUri);
+})();
