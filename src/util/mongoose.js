@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { environment } = require("./config");
 const logger = require("./logger");
 
 module.exports.connectMongoose = async (url) => {
@@ -12,7 +11,7 @@ module.exports.connectMongoose = async (url) => {
     })
     .then((db) => {
       logger.info(
-        `Successfully connected to MongoDB cluster in ${environment} mode.`
+        `Successfully connected to MongoDB server.`
       );
       return db;
     })

@@ -4,5 +4,5 @@ path: require("find-config")(".env")
 if (ENV.error) throw ENV.error;
 
 module.exports = {
-    apiBasePath: 'http://localhost:3000'
+    baseUrl: 'http://localhost:3000'
 }

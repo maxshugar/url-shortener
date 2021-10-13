@@ -1,14 +1,13 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const validUrl = require('valid-url');
-const shortId = require('shortid');
-const URL = require('../models/url');
+const validUrl = require("valid-url");
+const shortId = require("shortid");
+const URL = require("../models/url");
+const logger = require("../util/logger");
+const config = require("../util/config");
 
-// API base endpoint.
-const baseUrl = 'http://localhost:3000';
-
-/** 
+/**
  * @swagger
  * /shorten:
  *  post:
@@ -21,7 +20,7 @@ const baseUrl = 'http://localhost:3000';
  *          schema:
  *            type: object
  *            properties:
- *              originalUrl:    
+ *              originalUrl:
  *                type: string
  *                required: true
  *    responses:
@@ -30,43 +29,47 @@ const baseUrl = 'http://localhost:3000';
  *      '400':
  *        description: Unsuccessful response.
  */
-router.post('/shorten', async (req, res) => {
-    const { originalUrl } = req.body;
+router.post("/shorten", async (req, res) => {
+  const { originalUrl } = req.body;
 
-    // Ensure parameter has been passed in request body.
-    if (!originalUrl) return res.status(400).json('Url parameter missing from request body.');
+  // Ensure parameter has been passed in request body.
+  if (!originalUrl)
+    return res
+      .status(400)
+      .json("Parameter 'originalUrl' missing from request body.");
 
-    // Ensure format url is a valid uri.
-    if (!validUrl.isUri(originalUrl)) return res.status(400).json('Original url invalid.');
+  // Ensure url is a valid uri.
+  if (!validUrl.isUri(originalUrl))
+    return res.status(400).json("Original url invalid.");
 
-    try {
-        // Check to see whether the URL has already been shortened.
-        let url = await URL.findOne({
-            originalUrl
-        });
-        // Return url object if found in mongodb.
-        if (url) return res.status(200).json(url);
+  try {
+    // Check to see whether the URL has already been shortened.
+    let url = await URL.findOne({
+      originalUrl,
+    });
+    // Return url object if found in mongodb.
+    if (url) return res.status(200).json({ littleLink: url.shortUrl });
 
-        // Generate the shortened url.
-        const urlCode = shortId.generate();
-        const shortUrl = `${baseUrl}/${urlCode}`;
+    // Generate the shortened url.
+    const urlCode = shortId.generate();
+    const shortUrl = `${config.baseUrl}/${urlCode}`;
 
-        // Create a new url mongodb document.
-        url = new URL({
-            originalUrl,
-            urlCode,
-            shortUrl
-        });
+    // Create a new url mongodb document.
+    url = new URL({
+      originalUrl,
+      urlCode,
+      shortUrl,
+    });
 
-        // Save the url object to mongodb.
-        await url.save();
-        // Return url object if found in mongodb.
-        if (url) return res.status(200).json(url);
-    } catch (err) {
-        console.log(err)
-        res.status(500).json(err)
-    }
+    // Save the url object to mongodb.
+    await url.save();
 
+    // Return url object if found in mongodb.
+    if (url) return res.status(200).json({ littleLink: url.shortUrl });
+  } catch (err) {
+    logger.error(err);
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;

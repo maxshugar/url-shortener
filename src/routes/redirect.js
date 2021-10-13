@@ -1,9 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const URL = require('../models/url');
+const URL = require("../models/url");
 
-/** 
+/**
  * @swagger
  * /{shortUrl}:
  *  get:
@@ -19,18 +19,20 @@ const URL = require('../models/url');
  *      '400':
  *        description: Unsuccessful response.
  */
-router.get('/:urlCode', async (req, res) => {
-    const { urlCode } = req.params;
+router.get("/:urlCode", async (req, res) => {
+  const { urlCode } = req.params;
 
-    const url = await URL.findOne({
-        urlCode
-    });
+  // Check to see if the url has been previously shortened.
+  const url = await URL.findOne({
+    urlCode,
+  });
 
-    if(url)
-        return res.redirect(url.originalUrl);
-    else 
-        return res.status(404).json(`Url ${shortUrl} not found.`);
+  if (url)
+    // Redirect client to original url.
+    return res.redirect(url.originalUrl);
 
+  // Return url code not found error.
+  return res.status(404).json({ err: `Url code '${urlCode}' not found.` });
 });
 
 module.exports = router;
