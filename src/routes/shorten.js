@@ -29,6 +29,8 @@ const config = require("../util/config");
  *        description: A successful response.
  *      '400':
  *        description: Unsuccessful response.
+ *      '500':
+ *        description: Server error.
  */
 router.post("/shorten", async (req, res) => {
   const { originalUrl } = req.body;

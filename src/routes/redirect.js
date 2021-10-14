@@ -17,8 +17,8 @@ const URL = require("../models/url");
  *    responses:
  *      '200':
  *        description: A successful response.
- *      '400':
- *        description: Unsuccessful response.
+ *      '404':
+ *        description: Resource not found.
  */
 router.get("/:urlCode", async (req, res) => {
   const { urlCode } = req.params;
