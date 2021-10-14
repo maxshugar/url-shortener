@@ -8,6 +8,7 @@ const URL = require("../models/url");
  * /{shortUrl}:
  *  get:
  *    summary: Redirects to the original url.
+ *    tags: [v1]
  *    parameters:
  *      - in: path
  *        name: urlCode

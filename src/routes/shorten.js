@@ -12,6 +12,7 @@ const config = require("../util/config");
  * /shorten:
  *  post:
  *    summary: Shortens a url.
+ *    tags: [v1]
  *    requestBody:
  *      required: true
  *      description: The url to be shortened.
@@ -41,7 +42,7 @@ router.post("/shorten", async (req, res) => {
   // Ensure url is a valid uri.
   if (!validUrl.isUri(originalUrl))
     return res.status(400).json("Original url invalid.");
-
+  
   try {
     // Check to see whether the URL has already been shortened.
     let url = await URL.findOne({
