@@ -2,15 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-    originalUrl: {
+    original: {
         type: String,
         required: true
     },
-    urlCode: {
+    code: {
         type: String,
         required: true
     },
-    shortUrl: {
+    little: {
         type: String,
         required: true
     },

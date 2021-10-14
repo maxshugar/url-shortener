@@ -24,12 +24,12 @@ router.get("/:urlCode", async (req, res) => {
 
   // Check to see if the url has been previously shortened.
   const url = await URL.findOne({
-    urlCode,
+    code: urlCode,
   });
 
   if (url)
     // Redirect client to original url.
-    return res.redirect(url.originalUrl);
+    return res.redirect(url.original);
 
   // Return url code not found error.
   return res.status(404).json({ err: `Url code '${urlCode}' not found.` });

@@ -14,7 +14,7 @@ module.exports.startExpress = () => {
         swaggerDefinition: {
             openapi: '3.0.0',
             info: {
-                title: 'Little Links',
+                title: 'Little Links ™',
                 version: '1.0',
                 description: 'URL Shortener',
                 contact: {

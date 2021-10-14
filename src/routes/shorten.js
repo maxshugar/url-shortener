@@ -45,10 +45,17 @@ router.post("/shorten", async (req, res) => {
   try {
     // Check to see whether the URL has already been shortened.
     let url = await URL.findOne({
-      originalUrl,
+      original: originalUrl,
     });
     // Return url object if found in mongodb.
-    if (url) return res.status(200).json({ littleLink: url.shortUrl });
+    if (url)
+      return res
+        .status(200)
+        .json({
+          littleLink: url.little,
+          code: url.code,
+          original: url.original,
+        });
 
     // Generate the shortened url.
     const urlCode = shortId.generate();
@@ -56,16 +63,23 @@ router.post("/shorten", async (req, res) => {
 
     // Create a new url mongodb document.
     url = new URL({
-      originalUrl,
-      urlCode,
-      shortUrl,
+      original: originalUrl,
+      code: urlCode,
+      little: shortUrl,
     });
 
     // Save the url object to mongodb.
     await url.save();
 
     // Return url object if found in mongodb.
-    if (url) return res.status(200).json({ littleLink: url.shortUrl });
+    if (url)
+      return res
+        .status(200)
+        .json({
+          littleLink: url.little,
+          code: url.code,
+          original: url.original,
+        });
   } catch (err) {
     logger.error(err);
     res.status(500).json(err);

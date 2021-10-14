@@ -57,11 +57,12 @@ describe("Little Links ™", () => {
         .request(server)
         .post("/shorten")
         .set("content-type", "application/json")
-        .send({ originalUrl: "https://facebook.com" })
+        .send({ originalUrl: "https://www.facebook.com/" })
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property("littleLink");
-          links.push(res.body.littleLink);
+          res.body.should.have.property("code");
+          links.push(res.body);
           done();
         });
     });
@@ -70,16 +71,37 @@ describe("Little Links ™", () => {
           .request(server)
           .post("/shorten")
           .set("content-type", "application/json")
-          .send({ originalUrl: "https://facebook.com" })
+          .send({ originalUrl: "https://www.facebook.com/" })
           .end((err, res) => {
             res.should.have.status(200);
             res.body.should.have.property("littleLink");
-            res.body.littleLink.should.equal(links[0]);
+            res.body.should.have.property("code");
+            res.body.littleLink.should.equal(links[0].littleLink);
+            res.body.code.should.equal(links[0].code);
             done();
           });
       });
   });
   describe('Redirect', () => {
-    
+    it("It should redirect to the original url using the previously generated shortened url.", (done) => {
+      chai
+        .request(server)
+        .get(`/${links[0].code}`)
+        .redirects(0)
+        .end((err, res) => {
+          res.should.redirectTo(links[0].original);
+          done();
+        });
+    });
+    it("It should return http status code 400 for a shortened url that does not exist.", (done) => {
+      chai
+        .request(server)
+        .get(`/12345abcde`)
+        .redirects(0)
+        .end((err, res) => {
+          res.body.err.should.equal('Url code \'12345abcde\' not found.');
+          done();
+        });
+    });
   })
 });
