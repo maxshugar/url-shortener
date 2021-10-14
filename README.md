@@ -42,7 +42,7 @@ To run tests, run the following command
   
 ## Swagger Documentation
 
-Start the server, open a web browser and visit http://localhost:3000/docs
+Start the server, open a web browser and visit http://localhost:3000/api/docs
 
   
 ## Authors
